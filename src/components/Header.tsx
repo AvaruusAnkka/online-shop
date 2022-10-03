@@ -30,25 +30,29 @@ const Header = () => {
 					}}
 				>
 					<Box sx={{ pr: 1 }}>
-						{appStore.routes.map((route) => (
-							<Button
-								key={route.path}
-								component={NavLink}
-								to={route.path}
-								variant='text'
-								sx={(theme) => ({
-									'&:hover': { bgcolor: 'transparent' },
-									fontSize: '1.25rem',
-									fontWeight: (theme) => theme.typography.fontWeightRegular,
-									color: 'inherit',
-									'&.active': theme.palette.mode === 'dark' && {
-										color: theme.palette.primary.main,
-									},
-								})}
-							>
-								{route.label}
-							</Button>
-						))}
+						{appStore.routes.map((route) =>
+							route.label === 'Admin' ? (
+								<></>
+							) : (
+								<Button
+									key={route.path}
+									component={NavLink}
+									to={route.path}
+									variant='text'
+									sx={(theme) => ({
+										'&:hover': { bgcolor: 'transparent' },
+										fontSize: 20,
+										fontWeight: (theme) => theme.typography.fontWeightRegular,
+										color: 'inherit',
+										'&.active': theme.palette.mode === 'dark' && {
+											color: theme.palette.primary.main,
+										},
+									})}
+								>
+									{route.label}
+								</Button>
+							)
+						)}
 					</Box>
 				</Box>
 				<MenuIconButton
@@ -60,20 +64,24 @@ const Header = () => {
 					}}
 					icon={<MenuIcon />}
 				>
-					{appStore.routes.map((route) => (
-						<MenuItem
-							key={route.path}
-							component={NavLink}
-							to={route.path}
-							sx={{
-								'&.active': (theme) => ({
-									color: theme.palette.primary.main,
-								}),
-							}}
-						>
-							{route.label}
-						</MenuItem>
-					))}
+					{appStore.routes.map((route) =>
+						route.label === 'Admin' ? (
+							<></>
+						) : (
+							<MenuItem
+								key={route.path}
+								component={NavLink}
+								to={route.path}
+								sx={{
+									'&.active': (theme) => ({
+										color: theme.palette.primary.main,
+									}),
+								}}
+							>
+								{route.label}
+							</MenuItem>
+						)
+					)}
 				</MenuIconButton>
 				<DarkThemeIconButton sx={{ color: 'inherit' }} />
 			</Toolbar>

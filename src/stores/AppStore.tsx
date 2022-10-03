@@ -1,13 +1,15 @@
 import { makeAutoObservable } from 'mobx'
 import Home from 'routes/Home'
-import About from 'routes/About'
+import Admin from 'routes/Admin'
+import Login from 'routes/Login'
 
 export default class AppStore {
-	private _isDarkTheme = false
+	private _isDarkTheme = true
 	private _isLoading = false
 	private _routes = [
 		{ label: 'Home', path: '/home', element: <Home /> },
-		{ label: 'About', path: '/about', element: <About /> },
+		{ label: 'Admin', path: '/admin', element: <Admin /> },
+		{ label: 'Login', path: '/login', element: <Login /> },
 	]
 
 	constructor() {
