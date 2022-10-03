@@ -25,7 +25,6 @@ const muiTheme = (isDarkTheme: boolean) => {
 		},
 		typography: {
 			fontFamily: ['Open Sans', 'Roboto', 'Arial', 'sans-serif'].join(','),
-			fontSize: 16,
 			fontWeightLight: 300,
 			fontWeightRegular: 400,
 			fontWeightMedium: 500,

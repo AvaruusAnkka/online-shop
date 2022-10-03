@@ -3,7 +3,7 @@ import Home from 'routes/Home'
 import About from 'routes/About'
 
 export default class AppStore {
-	private _isDarkTheme = true
+	private _isDarkTheme = false
 	private _isLoading = false
 	private _routes = [
 		{ label: 'Home', path: '/home', element: <Home /> },
