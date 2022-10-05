@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router-dom'
+import { observer } from 'mobx-react-lite'
 import {
 	AppBar,
 	Toolbar,
@@ -11,10 +12,9 @@ import {
 } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu'
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
-import MenuIconButton from './MenuIconButton'
-import { useStoreContext } from 'contexts/StoreContext'
-import { observer } from 'mobx-react-lite'
 import { ReactComponent as Logo } from 'icons/Logo.svg'
+import { useStoreContext } from 'contexts/StoreContext'
+import MenuIconButton from './MenuIconButton'
 
 const Header = () => {
 	const { appStore } = useStoreContext()
