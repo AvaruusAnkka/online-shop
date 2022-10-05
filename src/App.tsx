@@ -7,18 +7,24 @@ import {
 import { Backdrop, CircularProgress } from '@mui/material'
 import { useStoreContext } from 'contexts/StoreContext'
 import Header from 'components/Header'
+import Home from 'routes/Home'
+import Login from 'routes/Login'
+import Account from 'routes/Account'
+import ShoppingCart from 'routes/ShoppingCart'
+import Admin from 'routes/Admin'
+import AddNew from 'routes/AddNew'
 
 const AppRoutes = () => {
-	const { appStore } = useStoreContext()
-
 	return (
 		<Routes>
-			<Route
-				path='/'element={<Navigate replace to='/home' />}
-			/>
-			{appStore.routes.map((route) => (
-				<Route key={route.path} path={route.path} element={route.element} />
-			))}
+			<Route path='*' element={<Navigate replace to='/' />} />
+			<Route path='/' element={<Navigate replace to='/home' />} />
+			<Route path='home' element={<Home />} />
+			<Route path='login' element={<Login />} />
+			<Route path='account' element={<Account />} />
+			<Route path='shoppingcart' element={<ShoppingCart />} />
+			<Route path='admin' element={<Admin />} />
+			<Route path='new' element={<AddNew />} />
 		</Routes>
 	)
 }

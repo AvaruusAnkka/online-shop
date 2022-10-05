@@ -6,87 +6,102 @@ import {
 	MenuItem,
 	Typography,
 	Box,
+	styled,
+	IconButton,
 } from '@mui/material'
-import { Menu as MenuIcon } from '@mui/icons-material'
+import MenuIcon from '@mui/icons-material/Menu'
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
 import MenuIconButton from './MenuIconButton'
-import DarkThemeIconButton from './DarkThemeIconButton'
 import { useStoreContext } from 'contexts/StoreContext'
+import { observer } from 'mobx-react-lite'
+import { ReactComponent as Logo } from 'icons/Logo.svg'
 
 const Header = () => {
 	const { appStore } = useStoreContext()
 
+	const NavButton = styled(Button)(({ theme }) => ({
+		fontSize: 20,
+		fontWeight: theme.typography.fontWeightRegular,
+		color: 'inherit',
+		'&.active': theme.palette.mode === 'dark' && {
+			color: theme.palette.primary.main,
+		},
+	})) as typeof Button
+
+	const MenuButton = styled(MenuItem)(({ theme }) => ({
+		fontWeight: 500,
+		'&.active': { color: theme.palette.primary.main },
+	})) as typeof MenuItem
+
 	return (
 		<AppBar>
 			<Toolbar sx={{ p: 1 }}>
+				<Logo height={48} width={48} />
 				<Typography variant='h1' sx={{ pl: 1, flexGrow: 1, fontSize: 32 }}>
 					Online Shop
 				</Typography>
-				<Box
-					sx={{
-						display: {
-							xs: 'none',
-							sm: 'block',
-						},
-					}}
-				>
+				<Box sx={{ display: { xs: 'none', sm: 'block' } }}>
 					<Box sx={{ pr: 1 }}>
-						{appStore.routes.map((route) =>
-							route.label === 'Admin' ? (
-								<></>
-							) : (
-								<Button
-									key={route.path}
-									component={NavLink}
-									to={route.path}
-									variant='text'
-									sx={(theme) => ({
-										'&:hover': { bgcolor: 'transparent' },
-										fontSize: 20,
-										fontWeight: (theme) => theme.typography.fontWeightRegular,
-										color: 'inherit',
-										'&.active': theme.palette.mode === 'dark' && {
-											color: theme.palette.primary.main,
-										},
-									})}
-								>
-									{route.label}
-								</Button>
-							)
+						<NavButton component={NavLink} to='/home' variant='text'>
+							Home
+						</NavButton>
+						{appStore.loggedIn ? (
+							<NavButton component={NavLink} to='/account' variant='text'>
+								Account
+							</NavButton>
+						) : (
+							<NavButton component={NavLink} to='/login' variant='text'>
+								Login
+							</NavButton>
+						)}
+						{appStore.admin ? (
+							<NavButton component={NavLink} to='/new' variant='text'>
+								Add new
+							</NavButton>
+						) : (
+							<IconButton
+								component={NavLink}
+								to='/shoppingcart'
+								sx={{ color: 'inherit' }}
+							>
+								<ShoppingCartIcon />
+							</IconButton>
 						)}
 					</Box>
 				</Box>
 				<MenuIconButton
-					sx={{
-						color: 'inherit',
-						display: {
-							sm: 'none',
-						},
-					}}
+					sx={{ color: 'inherit', display: { sm: 'none' } }}
 					icon={<MenuIcon />}
 				>
-					{appStore.routes.map((route) =>
-						route.label === 'Admin' ? (
-							<></>
-						) : (
-							<MenuItem
-								key={route.path}
-								component={NavLink}
-								to={route.path}
-								sx={{
-									'&.active': (theme) => ({
-										color: theme.palette.primary.main,
-									}),
-								}}
-							>
-								{route.label}
-							</MenuItem>
-						)
+					<MenuButton component={NavLink} to='/home'>
+						Home
+					</MenuButton>
+					{appStore.loggedIn ? (
+						<MenuButton component={NavLink} to='/account'>
+							Account
+						</MenuButton>
+					) : (
+						<MenuButton component={NavLink} to='/login'>
+							Login
+						</MenuButton>
+					)}
+					{appStore.admin ? (
+						<MenuButton component={NavLink} to='/new'>
+							Add new
+						</MenuButton>
+					) : (
+						<MenuItem
+							component={NavLink}
+							to='/shoppingcart'
+							sx={{ color: 'inherit', justifyContent: 'center' }}
+						>
+							<ShoppingCartIcon />
+						</MenuItem>
 					)}
 				</MenuIconButton>
-				<DarkThemeIconButton sx={{ color: 'inherit' }} />
 			</Toolbar>
 		</AppBar>
 	)
 }
 
-export default Header
+export default observer(Header)
