@@ -1,4 +1,5 @@
 import {
+	Box,
 	Card,
 	CardActionArea,
 	CardContent,
@@ -11,7 +12,7 @@ export const ItemCard = (item: Item) => {
 	return (
 		<Card sx={{ height: 1 }}>
 			<CardActionArea
-				sx={theme => ({
+				sx={(theme) => ({
 					height: 1,
 					display: 'flex',
 					justifyContent: 'initial',
@@ -22,16 +23,31 @@ export const ItemCard = (item: Item) => {
 						flexDirection: 'column',
 						alignItems: 'start',
 						'.MuiCardMedia-root': { width: 1 },
-					}
+					},
 				})}
 			>
 				<CardMedia component='img' image={item.img} alt={item.label} />
-				<CardContent>
-					<Typography sx={{ fontSize: 20, fontWeight: 500 }}>
-						{item.label}
-					</Typography>
-					<Typography>{item.description}</Typography>
-					<Typography>{item.price.toFixed(2) + 'e'}</Typography>
+				<CardContent
+					sx={{
+						width: 1,
+						height: 1,
+						display: 'flex',
+						flexDirection: 'column',
+						justifyContent: 'space-between',
+					}}
+				>
+					<Box>
+						<Typography sx={{ fontSize: 20, fontWeight: 500 }}>
+							{item.label}
+						</Typography>
+						<Typography>{item.description}</Typography>
+						<Typography>{item.price.toFixed(2) + 'e'}</Typography>
+					</Box>
+					{item.status !== 'Available' && (
+						<Typography sx={{ color: 'red', textAlign: 'right' }}>
+							{item.status}
+						</Typography>
+					)}
 				</CardContent>
 			</CardActionArea>
 		</Card>
