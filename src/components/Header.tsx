@@ -17,7 +17,7 @@ import { useStoreContext } from 'contexts/StoreContext'
 import MenuIconButton from './MenuIconButton'
 
 const Header = () => {
-	const { appStore } = useStoreContext()
+	const { firebaseStore } = useStoreContext()
 
 	const NavButton = styled(Button)(({ theme }) => ({
 		fontSize: 20,
@@ -45,16 +45,16 @@ const Header = () => {
 						<NavButton component={NavLink} to='/home' variant='text'>
 							Home
 						</NavButton>
-						{appStore.loggedIn ? (
-							<NavButton component={NavLink} to='/account' variant='text'>
-								Account
-							</NavButton>
-						) : (
+						{firebaseStore.currentUser === null ? (
 							<NavButton component={NavLink} to='/login' variant='text'>
 								Login
 							</NavButton>
+						) : (
+							<NavButton component={NavLink} to='/account' variant='text'>
+								Account
+							</NavButton>
 						)}
-						{appStore.admin ? (
+						{firebaseStore.currentUser === 'admin@admin.com' ? (
 							<NavButton component={NavLink} to='/new' variant='text'>
 								Add new
 							</NavButton>
@@ -76,16 +76,16 @@ const Header = () => {
 					<MenuButton component={NavLink} to='/home'>
 						Home
 					</MenuButton>
-					{appStore.loggedIn ? (
-						<MenuButton component={NavLink} to='/account'>
-							Account
-						</MenuButton>
-					) : (
+					{firebaseStore.currentUser === null ? (
 						<MenuButton component={NavLink} to='/login'>
 							Login
 						</MenuButton>
+					) : (
+						<MenuButton component={NavLink} to='/account'>
+							Account
+						</MenuButton>
 					)}
-					{appStore.admin ? (
+					{firebaseStore.currentUser === 'admin@admin.com' ? (
 						<MenuButton component={NavLink} to='/new'>
 							Add new
 						</MenuButton>

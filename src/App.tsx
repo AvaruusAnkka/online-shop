@@ -11,7 +11,6 @@ import Home from 'routes/Home'
 import Login from 'routes/Login'
 import Account from 'routes/Account'
 import ShoppingCart from 'routes/ShoppingCart'
-import Admin from 'routes/Admin'
 import AddNew from 'routes/AddNew'
 
 const AppRoutes = () => {
@@ -23,7 +22,6 @@ const AppRoutes = () => {
 			<Route path='login' element={<Login />} />
 			<Route path='account' element={<Account />} />
 			<Route path='shoppingcart' element={<ShoppingCart />} />
-			<Route path='admin' element={<Admin />} />
 			<Route path='new' element={<AddNew />} />
 		</Routes>
 	)
