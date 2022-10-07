@@ -9,7 +9,35 @@ const Login = () => {
 	const navigate = useNavigate()
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
-	const [showError, setShowError] = useState(false)
+	const [emailErrorText, setEmailErrorText] = useState('')
+	const [passwordErrorText, setPasswordErrorText] = useState('')
+	const [errorText, setErrorText] = useState('')
+
+	const onSignIn = async () => {
+		if (!email) {
+			setEmailErrorText('Email is required')
+			return
+		}
+		if (!email.match(/^\S+@\S+\.\S{2,3}$/)) {
+			setEmailErrorText('Email is not valid')
+			return
+		}
+		setEmailErrorText('')
+
+		if (!password) {
+			setPasswordErrorText('Password is required')
+			return
+		}
+		setPasswordErrorText('')
+
+		const signedIn = await firebaseStore.signIn(email, password)
+		if (signedIn) {
+			setEmail('')
+			setPassword('')
+			setErrorText('')
+			navigate('/home')
+		} else setErrorText('Email or password is incorrect')
+	}
 
 	return (
 		<Container
@@ -22,19 +50,29 @@ const Login = () => {
 		>
 			<Logo height={240} width={240} style={{ marginInline: 'auto' }} />
 			<TextField
-				label='Name'
+				label='Email'
 				value={email}
 				onChange={(e) => setEmail(e.target.value)}
+				onKeyDown={(e) => {
+					if (e.key === 'Enter') onSignIn()
+				}}
+				error={!!emailErrorText}
+				helperText={emailErrorText}
 				autoComplete='off'
 			/>
 			<TextField
 				label='Password'
 				value={password}
 				onChange={(e) => setPassword(e.target.value)}
+				onKeyDown={(e) => {
+					if (e.key === 'Enter') onSignIn()
+				}}
+				error={!!passwordErrorText}
+				helperText={passwordErrorText}
 				autoComplete='off'
 				type='password'
 			/>
-			{showError && (
+			{errorText && (
 				<Typography
 					sx={{
 						color: (theme) => theme.palette.error.main,
@@ -42,18 +80,10 @@ const Login = () => {
 						textAlign: 'center',
 					}}
 				>
-					Email or password is incorrect
+					{errorText}
 				</Typography>
 			)}
-			<Button
-				onClick={async () => {
-					const signedIn = await firebaseStore.signIn(email, password)
-					if (signedIn) navigate('/home')
-					setShowError(!signedIn)
-				}}
-			>
-				Sign In
-			</Button>
+			<Button onClick={onSignIn}>Sign In</Button>
 			<Button>Create Account</Button>
 		</Container>
 	)
