@@ -1,5 +1,11 @@
 import { makeAutoObservable } from 'mobx'
-import { getAuth, signInWithEmailAndPassword, signOut } from 'firebase/auth'
+import {
+	AuthErrorCodes,
+	createUserWithEmailAndPassword,
+	getAuth,
+	signInWithEmailAndPassword,
+	signOut,
+} from 'firebase/auth'
 import { getFirestore } from 'firebase/firestore'
 import firebaseApp from 'firebaseApp'
 
@@ -20,6 +26,23 @@ export default class FirebaseStore {
 		this._currentUser = value
 	}
 
+	async createAccount(email: string, password: string) {
+		try {
+			const userCredential = await createUserWithEmailAndPassword(
+				this._auth,
+				email,
+				password
+			)
+			this.currentUser = userCredential.user.uid
+			return true
+		} catch (error: any) {
+			if (error.code === AuthErrorCodes.EMAIL_EXISTS) {
+				return 'Email already exists'
+			}
+			return false
+		}
+	}
+
 	async signIn(email: string, password: string) {
 		try {
 			const userCredential = await signInWithEmailAndPassword(
@@ -27,9 +50,19 @@ export default class FirebaseStore {
 				email,
 				password
 			)
-			this.currentUser = userCredential.user.email
+			this.currentUser = userCredential.user.uid
 			return true
-		} catch (error) {
+		} catch (error: any) {
+			if (error.code === AuthErrorCodes.INVALID_PASSWORD) {
+				return 'Wrong password'
+			}
+
+			const copy = JSON.parse(JSON.stringify(AuthErrorCodes))
+			for (const key in copy) {
+				if (error.code === copy[key]) {
+					console.log(key + ': ' + error.code);
+				}
+			}
 			return false
 		}
 	}

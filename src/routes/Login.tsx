@@ -13,30 +13,73 @@ const Login = () => {
 	const [passwordErrorText, setPasswordErrorText] = useState('')
 	const [errorText, setErrorText] = useState('')
 
-	const onSignIn = async () => {
+	const reset = () => {
+		setEmail('')
+		setPassword('')
+		setEmailErrorText('')
+		setPasswordErrorText('')
+		setErrorText('')
+	}
+
+	const inputsAreValid = () => {
 		if (!email) {
 			setEmailErrorText('Email is required')
-			return
+			return false
 		}
 		if (!email.match(/^\S+@\S+\.\S{2,3}$/)) {
 			setEmailErrorText('Email is not valid')
-			return
+			return false
 		}
 		setEmailErrorText('')
 
 		if (!password) {
 			setPasswordErrorText('Password is required')
-			return
+			return false
 		}
 		setPasswordErrorText('')
 
+		return true
+	}
+
+	const newAccountIsValid = () => {
+		if (!inputsAreValid()) return false
+		if (password.length < 6) {
+			setPasswordErrorText('Password must be at least 6 characters')
+			return false
+		}
+		return true
+	}
+
+	const onSignIn = async () => {
+		if (!inputsAreValid()) return
+
 		const signedIn = await firebaseStore.signIn(email, password)
+
+		if (typeof signedIn === 'string') {
+			setPasswordErrorText(signedIn)
+			return
+		}
+
 		if (signedIn) {
-			setEmail('')
-			setPassword('')
-			setErrorText('')
+			reset()
 			navigate('/home')
 		} else setErrorText('Email or password is incorrect')
+	}
+
+	const onCreateAccount = async () => {
+		if (!newAccountIsValid()) return
+
+		const accountCreated = await firebaseStore.createAccount(email, password)
+
+		if (typeof accountCreated === 'string') {
+			setErrorText(accountCreated)
+			return
+		}
+
+		if (accountCreated) {
+			reset()
+			navigate('/home')
+		} else setErrorText("Account couldn't be created")
 	}
 
 	return (
@@ -84,7 +127,7 @@ const Login = () => {
 				</Typography>
 			)}
 			<Button onClick={onSignIn}>Sign In</Button>
-			<Button>Create Account</Button>
+			<Button onClick={onCreateAccount}>Create Account</Button>
 		</Container>
 	)
 }
