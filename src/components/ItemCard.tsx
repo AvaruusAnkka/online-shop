@@ -41,6 +41,7 @@ export const ItemCard = (item: Item) => {
 							{item.label}
 						</Typography>
 						<Typography>{item.description}</Typography>
+						<Typography>{item.category}</Typography>
 						<Typography>{item.price.toFixed(2) + 'e'}</Typography>
 					</Box>
 					{item.status !== 'Available' && (
