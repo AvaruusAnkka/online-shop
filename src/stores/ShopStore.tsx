@@ -79,6 +79,8 @@ export interface Item {
 export default class ShopStore {
   private _items: Item[] = dummyItems
   private _filtered: Item[] = this._items
+  private _searchValue = ''
+  private _selectedCategory = 'Category'
 
   constructor() {
     makeAutoObservable(this)
@@ -88,13 +90,30 @@ export default class ShopStore {
     return this._items
   }
 
-  get filtered_items() {
+  get filteredItems() {
+    this.filter()
     return this._filtered
+  }
+
+  get searchValue() {
+    return this._searchValue
+  }
+
+  set searchValue(value) {
+    this._searchValue = value
+  }
+
+  get selectedCategory() {
+    return this._selectedCategory
+  }
+
+  set selectedCategory(value) {
+    this._selectedCategory = value
   }
 
   get categoriesList() {
     let categories: string[] = ['All']
-    this._items.map((item) => {
+    this._items.forEach((item) => {
       if (!categories.includes(item.category)) {
         categories.push(item.category)
       }
@@ -102,14 +121,19 @@ export default class ShopStore {
     return categories
   }
 
-  filter(selectedSearch: string, selectedCategory: string) {
+  filter() {
     this._filtered = this._items.filter((item) => {
-      if (selectedCategory === 'All' || selectedCategory === 'Category') {
-        return item.label.toLowerCase().includes(selectedSearch.toLowerCase())
+      if (
+        this._selectedCategory === 'All' ||
+        this._selectedCategory === 'Category'
+      ) {
+        return item.label
+          .toLowerCase()
+          .includes(this._searchValue.toLowerCase())
       } else {
         return (
-          item.label.toLowerCase().includes(selectedSearch.toLowerCase()) &&
-          item.category === selectedCategory
+          item.label.toLowerCase().includes(this._searchValue.toLowerCase()) &&
+          item.category === this._selectedCategory
         )
       }
     })

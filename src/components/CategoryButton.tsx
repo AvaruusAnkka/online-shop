@@ -2,50 +2,32 @@ import { Button, Menu, MenuItem } from '@mui/material'
 import { useStoreContext } from 'contexts/StoreContext'
 import React from 'react'
 
-const CategoryButton = (
-  categoryValue: string,
-  setCategoryLabel: React.Dispatch<React.SetStateAction<string>>,
-  searchFunction: Function
-) => {
+const CategoryButton = () => {
   const { shopStore } = useStoreContext()
-
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
-  const open = Boolean(anchorEl)
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget)
-  }
-  const handleClose = () => {
-    setAnchorEl(null)
-  }
+  const [categoryButton, setCategoryButton] =
+    React.useState<null | HTMLElement>(null)
 
   return (
     <>
       <Button
-        aria-controls={open ? 'basic-menu' : undefined}
-        aria-haspopup="true"
-        aria-expanded={open ? 'true' : undefined}
-        onClick={handleClick}
+        onClick={(e) => setCategoryButton(e.currentTarget)}
         sx={{ mr: 2 }}
       >
-        {categoryValue}
+        {shopStore.selectedCategory}
       </Button>
       <Menu
-        id="basic-menu"
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-        MenuListProps={{
-          'aria-labelledby': 'basic-button',
-        }}
+        anchorEl={categoryButton}
+        open={!!categoryButton}
+        onClose={() => setCategoryButton(null)}
       >
         {shopStore.categoriesList.map((category) => {
           return (
             <MenuItem
               key={category}
-              onClick={() => {
-                handleClose()
-                setCategoryLabel(category)
-                searchFunction()
+              onClick={(e) => {
+                setCategoryButton(null)
+                shopStore.selectedCategory = category
+                shopStore.filter()
               }}
             >
               {category}
